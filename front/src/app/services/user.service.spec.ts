@@ -1,21 +1,26 @@
-import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { expect } from '@jest/globals';
-import { HttpClient } from '@angular/common/http';
-
+import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { UserService } from './user.service';
-import { User, Users, UsersWithoutOne } from './user.fixtures';
+import { User, Users } from './user.fixtures';
 
 describe('UserService', () => {
   let service: UserService;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports:[
-        HttpClientModule
-      ]
+      imports:[HttpClientTestingModule],
+      providers: [UserService]
     });
+
     service = TestBed.inject(UserService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
   });
 
   it('should be created', () => {
@@ -23,26 +28,48 @@ describe('UserService', () => {
   });
 
   it('should get a user by id', () => {
-    service.getById = jest.fn().mockReturnValue(User);
+    service.getById('1').subscribe(user => {
+      expect(user).toEqual(Users[0]);
+    });
 
-    const result = service.getById('1');
-
-    expect(result).toEqual(User);
+    const req = httpMock.expectOne(`api/user/1`);
+    expect(req.request.method).toBe('GET');
+    req.flush(Users[0]);
   });
 
   it('should not get a user by id', () => {
-    service.getById = jest.fn().mockReturnValue(null);
+    service.getById('null').subscribe(
+      user => fail('error expected'),
+      (error: HttpErrorResponse) => {
+        expect(error.status).toEqual(404);
+      }
+    );
 
-    const result = service.getById('1');
-
-    expect(result).toBeNull();
+    const req = httpMock.expectOne(`api/user/null`);
+    expect(req.request.method).toBe('GET');
+    req.flush('Error', {status: 404, statusText: 'Not Found'});
   });
 
   it('should delete a user', () => {
-    service.delete = jest.fn().mockReturnValue(null);
+    service.delete('1').subscribe(user => {
+      expect(user).toEqual(null);
+    });
 
-    const result = service.delete('1');
+    const req = httpMock.expectOne('api/user/1');
+    expect(req.request.method).toBe('DELETE');
+    req.flush(null);
+  });
 
-    expect(result).toEqual(null);
+  it('should not delete a user', () => {
+    service.delete('null').subscribe(
+      user => fail('error expected'),
+      (error: HttpErrorResponse) => {
+        expect(error.status).toEqual(404);
+      }
+    );
+
+    const req = httpMock.expectOne('api/user/null');
+    expect(req.request.method).toBe('DELETE');
+    req.flush('Error', {status: 404, statusText: 'Not Found'});
   });
 });
