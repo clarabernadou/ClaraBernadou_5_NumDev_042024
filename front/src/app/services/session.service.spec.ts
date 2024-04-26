@@ -79,4 +79,23 @@ describe('SessionService', () => {
       }
     );
   });
+
+  it('should next', () => {
+    service.logIn(UserSessionInformation);
+    service.$isLogged().subscribe(session => {
+      expect(session).toBeTruthy();
+    });
+  });
+
+  it('should not next', () => {
+    service.logIn(UserSessionInformation);
+    service.$isLogged().subscribe(
+      session => {
+        expect(session).toBeFalsy();
+      },
+      (error: HttpErrorResponse) => {
+        expect(error.status).toEqual(404);
+      }
+    );
+  });
 });
