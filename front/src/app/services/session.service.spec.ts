@@ -4,7 +4,7 @@ import { expect } from '@jest/globals';
 import { SessionService } from './session.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpErrorResponse } from '@angular/common/http';
-import { UserSessionInformation } from './session.fixtures';
+import { UserSessionInformation, UserSessionInformationWithError } from './session.fixtures';
 
 describe('SessionService', () => {
   let service: SessionService;
@@ -35,7 +35,9 @@ describe('SessionService', () => {
 
   it('should return not logged status', () => {
     service.$isLogged().subscribe(
-      session => fail('error expected'),
+      session => {
+        expect(session).toBeFalsy();
+      },
       (error: HttpErrorResponse) => {
         expect(error.status).toEqual(404);
       }
@@ -44,13 +46,13 @@ describe('SessionService', () => {
 
   it('should log in', () => {
     service.logIn(UserSessionInformation);
-    service.$isLogged().subscribe(session => {
-      expect(session).toBeTruthy();
-    });
+
+    expect(service.isLogged).toBeTruthy();
+    expect(service.sessionInformation).toEqual(UserSessionInformation);
   });
 
-  it('should not log in', () => {
-    service.logIn(UserSessionInformation);
+  it('should not be log in', () => {
+    service.logIn(UserSessionInformationWithError);
     service.$isLogged().subscribe(
       session => { 
         expect(session).toBeFalsy(); 
@@ -59,6 +61,9 @@ describe('SessionService', () => {
         expect(error.status).toEqual(404);
       }
     );
+
+    expect(service.isLogged).toBeTruthy();
+    expect(service.sessionInformation).not.toEqual(UserSessionInformation);
   });
 
   it('should log out', () => {
@@ -66,6 +71,9 @@ describe('SessionService', () => {
     service.$isLogged().subscribe(session => {
       expect(session).toBeFalsy();
     });
+
+    expect(service.sessionInformation).toBeUndefined();
+    expect(service.isLogged).toBeFalsy();
   });
 
   it('should not log out', () => {
@@ -78,24 +86,8 @@ describe('SessionService', () => {
         expect(error.status).toEqual(404);
       }
     );
-  });
 
-  it('should next', () => {
-    service.logIn(UserSessionInformation);
-    service.$isLogged().subscribe(session => {
-      expect(session).toBeTruthy();
-    });
-  });
-
-  it('should not next', () => {
-    service.logIn(UserSessionInformation);
-    service.$isLogged().subscribe(
-      session => {
-        expect(session).toBeFalsy();
-      },
-      (error: HttpErrorResponse) => {
-        expect(error.status).toEqual(404);
-      }
-    );
+    expect(service.sessionInformation).toBeUndefined();
+    expect(service.isLogged).toBeFalsy();
   });
 });
