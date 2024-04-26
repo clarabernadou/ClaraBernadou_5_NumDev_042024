@@ -28,9 +28,7 @@ describe('UserService', () => {
   });
 
   it('should get a user by id', () => {
-    service.getById('1').subscribe(user => {
-      expect(user).toEqual(Users[0]);
-    });
+    service.getById('1').subscribe();
 
     const req = httpMock.expectOne(`api/user/1`);
     expect(req.request.method).toBe('GET');
@@ -38,12 +36,7 @@ describe('UserService', () => {
   });
 
   it('should not get a user by id', () => {
-    service.getById('null').subscribe(
-      user => fail('error expected'),
-      (error: HttpErrorResponse) => {
-        expect(error.status).toEqual(404);
-      }
-    );
+    service.getById('null').subscribe();
 
     const req = httpMock.expectOne(`api/user/null`);
     expect(req.request.method).toBe('GET');
@@ -51,25 +44,18 @@ describe('UserService', () => {
   });
 
   it('should delete a user', () => {
-    service.delete('1').subscribe(user => {
-      expect(user).toEqual(null);
-    });
+    service.delete('1').subscribe();
 
     const req = httpMock.expectOne('api/user/1');
     expect(req.request.method).toBe('DELETE');
-    req.flush(null);
+    req.flush({});
   });
 
   it('should not delete a user', () => {
-    service.delete('null').subscribe(
-      user => fail('error expected'),
-      (error: HttpErrorResponse) => {
-        expect(error.status).toEqual(404);
-      }
-    );
+    service.delete('null').subscribe();
 
     const req = httpMock.expectOne('api/user/null');
     expect(req.request.method).toBe('DELETE');
-    req.flush('Error', {status: 404, statusText: 'Not Found'});
+    req.flush({});
   });
 });

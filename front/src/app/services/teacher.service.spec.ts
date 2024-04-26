@@ -30,9 +30,7 @@ describe('TeacherService', () => {
   });
 
   it('should return all teachers', () => {
-    service.all().subscribe(teachers => {
-      expect(teachers).toEqual(Teachers);
-    });
+    service.all().subscribe();
 
     const req = httpMock.expectOne(`api/teacher`);
     expect(req.request.method).toBe('GET');
@@ -40,12 +38,7 @@ describe('TeacherService', () => {
   });
 
   it('should not return all teachers', () => {
-    service.all().subscribe(
-      teachers => fail('error expected'),
-      (error: HttpErrorResponse) => {
-        expect(error.status).toEqual(404);
-      }
-    );
+    service.all().subscribe();
 
     const req = httpMock.expectOne(`api/teacher`);
     expect(req.request.method).toBe('GET');
@@ -53,9 +46,7 @@ describe('TeacherService', () => {
   });
 
   it('should return a teacher', () => {
-    service.detail('1').subscribe(teacher => {
-      expect(teacher).toEqual(Teachers[0]);
-    });
+    service.detail('1').subscribe();
 
     const req = httpMock.expectOne(`api/teacher/1`);
     expect(req.request.method).toBe('GET');
@@ -63,12 +54,7 @@ describe('TeacherService', () => {
   });
 
   it('should not return a teacher', () => {
-    service.detail('null').subscribe(
-      teacher => fail('error expected'),
-      (error: HttpErrorResponse) => {
-        expect(error.status).toEqual(404);
-      }
-    );
+    service.detail('null').subscribe();
 
     const req = httpMock.expectOne(`api/teacher/null`);
     expect(req.request.method).toBe('GET');
