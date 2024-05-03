@@ -1,4 +1,15 @@
 describe('Register spec', () => {
+    it('Register page', () => {
+        cy.visit('/register')
+
+        cy.get('.mat-card-title').contains('Register').should('exist')
+        cy.get('input[formControlName=firstName]').should('exist')
+        cy.get('input[formControlName=lastName]').should('exist')
+        cy.get('input[formControlName=email]').should('exist')
+        cy.get('input[formControlName=password]').should('exist')
+        cy.get('button').contains('Submit').should('exist')
+    });
+
     it('Register successfull', () => {
         cy.visit('/register')
 
