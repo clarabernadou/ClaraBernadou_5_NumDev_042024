@@ -1,4 +1,13 @@
 describe('Login spec', () => {
+  it('Login page', () => {
+    cy.visit('/login')
+
+    cy.get('.mat-card-title').contains('Login').should('exist')
+    cy.get('input[formControlName=email]').should('exist')
+    cy.get('input[formControlName=password]').should('exist')
+    cy.get('button').contains('Submit').should('exist')
+  });
+
   it('Login successfull', () => {
     cy.visit('/login')
 
