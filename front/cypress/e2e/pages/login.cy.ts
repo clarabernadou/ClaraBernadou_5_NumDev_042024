@@ -1,6 +1,6 @@
 describe('Login spec', () => {
     beforeEach(() => {
-      cy.intercept('GET', '/api/auth', { fixture: 'user.json' })
+      cy.intercept('GET', '/api/auth', { fixture: 'users.json' })
     })
 
   it('Check login component', () => {
@@ -45,7 +45,7 @@ describe('Login spec', () => {
     cy.get('input[formControlName=password]').type(user.password);
     cy.get('button').contains('Submit').click();
 
-    cy.fixture('user.json').then(users => {
+    cy.fixture('users.json').then(users => {
       const foundUser = users.find(u => u.email === user.email);
       expect(foundUser).to.not.exist;
     });
@@ -74,7 +74,7 @@ describe('Login spec', () => {
     cy.get('input[formControlName=password]').type(user.password);
     cy.get('button').contains('Submit').click();
 
-    cy.fixture('user.json').then(users => {
+    cy.fixture('users.json').then(users => {
       const foundUser = users.find(u => u.email === user.email);
       expect(foundUser).to.exist;
       expect(foundUser.email).to.equal(user.email);
@@ -104,7 +104,7 @@ describe('Login spec', () => {
     cy.get('input[formControlName=password]').type(user.password);
     cy.get('button').contains('Submit').click();
 
-    cy.fixture('user.json').then(users => {
+    cy.fixture('users.json').then(users => {
       const foundUser = users.find(u => u.email === user.email);
       expect(foundUser).to.not.exist;
     });
@@ -132,7 +132,7 @@ describe('Login spec', () => {
     cy.get('input[formControlName=email]').type(user.email)
     cy.get('input[formControlName=password]').type(`${user.password}{enter}{enter}`)
 
-    cy.fixture('user.json').then(users => {
+    cy.fixture('users.json').then(users => {
       const foundUser = users.find(u => u.email === user.email);
       expect(foundUser).to.exist;
       expect(foundUser.email).to.equal(user.email);
