@@ -5,7 +5,8 @@
         "lastName": "Test",
         "firstName": "Toto",
         "createdAt": "2024-04-19T01:30:34",
-        "updatedAt": "2024-04-19T01:30:34"
+        "updatedAt": "2024-04-19T01:30:34",
+        "admin": true
     },
     {
         "id": 2,
@@ -13,6 +14,7 @@
         "lastName": "Test",
         "firstName": "Tata",
         "createdAt": "2024-04-19T01:30:34",
-        "updatedAt": "2024-04-19T01:30:34"
+        "updatedAt": "2024-04-19T01:30:34",
+        "admin": false
     }
 ]
