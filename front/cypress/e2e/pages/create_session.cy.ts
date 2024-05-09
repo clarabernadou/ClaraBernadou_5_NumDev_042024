@@ -4,34 +4,34 @@ describe('Create session spec', () => {
     })
 
     it('Login successfull', () => {
-        cy.visit('/login')
+      cy.visit('/login')
+  
+      const user = {
+        email: 'toto@test.com',
+        password: 'test!1234',
+        admin: true,
+      }
+  
+      cy.intercept('POST', '/api/auth/login', {
+        body: {
+          username: user.email,
+          password: user.password,
+          admin: user.admin,
+        },
+      });
+  
+      cy.get('input[formControlName=email]').type(user.email)
+      cy.get('input[formControlName=password]').type(`${user.password}{enter}{enter}`)
+  
+      cy.fixture('users.json').then(users => {
+        const foundUser = users.find(u => u.email === user.email);
+        expect(foundUser).to.exist;
+        expect(foundUser.email).to.equal(user.email);
+      });
+  
+      cy.url().should('include', '/sessions')
 
-        const user = {
-          email: 'toto@test.com',
-          password: 'test!1234',
-          admin: true,
-        }
-
-        cy.intercept('POST', '/api/auth/login', {
-          body: {
-            username: user.email,
-            password: user.password,
-            admin: user.admin,
-          },
-        });
-
-        cy.get('input[formControlName=email]').type("yoga@studio.com")
-        cy.get('input[formControlName=password]').type(`${"test!1234"}{enter}{enter}`)
-
-        cy.fixture('users.json').then(users => {
-          const foundUser = users.find(u => u.email === user.email);
-          expect(foundUser).to.exist;
-          expect(foundUser.email).to.equal(user.email);
-        });
-
-        cy.url().should('include', '/sessions')
-
-        cy.get('span').contains('Create').click()
+      cy.get('span').contains('Create').click()
     });
 
     it('Check create session page', () => {
