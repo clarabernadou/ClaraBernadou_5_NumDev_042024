@@ -68,14 +68,34 @@ describe('Create session spec', () => {
     })
 
     it('Create session', () => {
-        cy.get('input[formControlName=name]').type('Yoga')
-        cy.get('input[formControlName=date]').type('2024-05-06')
+        const session = {
+          id: 3,
+          name: "Test",
+          date: "2024-05-09",
+          teacher_id: 1,
+          description: "Test",
+          users: [],
+          createdAt: "2024-05-09",
+          updatedAt: "2024-05-09"
+        }
+
+        cy.get('input[formControlName=name]').type(session.name)
+        cy.get('input[formControlName=date]').type(session.date)
         cy.get('mat-select[formControlName="teacher_id"]').click();
-        cy.get('mat-option').contains('Margot DELAHAYE').click()
-        cy.get('textarea[formControlName=description]').type('A yoga session')
+        cy.get('mat-option').contains('Margot DELAHAYE').click();
+        cy.get('textarea[formControlName=description]').type(session.description)
 
         cy.get('button[type="submit"]').should('not.be.disabled');
+
+        cy.intercept('POST', '/api/session', {
+          body: session,
+        });
+
         cy.get('span').contains('Save').click()
         cy.url().should('include', '/sessions')
+
+        cy.get('.mat-simple-snackbar').should('exist')
+        cy.get('span').contains('Session created !').should('exist')
+        cy.get('button').contains('Close').should('exist')
     })
 });
