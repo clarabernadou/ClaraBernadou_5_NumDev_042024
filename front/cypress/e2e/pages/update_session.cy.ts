@@ -1,11 +1,9 @@
 describe('Update session spec', () => {
     beforeEach(() => {
-        cy.intercept('GET', '/api/teacher', { fixture: 'teachers.json' });
-        cy.intercept('GET', '/api/session', { fixture: 'sessions.json' });
-        cy.intercept('GET', '/api/session/1', { fixture: 'session.json' });
-    })
+      cy.intercept('GET', '/api/teacher', { fixture: 'teachers.json' });
+      cy.intercept('GET', '/api/session', { fixture: 'sessions.json' });
+      cy.intercept('GET', '/api/session/1', { fixture: 'session.json' });
 
-    it('Login successfull', () => {
       cy.visit('/login')
 
       const user = {
@@ -77,13 +75,33 @@ describe('Update session spec', () => {
     });
 
     it('Update session information', () => {
-        cy.get('input[formControlName=date]').type('2024-05-09')
+        const session = {
+          id: 3,
+          name: "Test",
+          date: "2024-05-09",
+          teacher_id: 2,
+          description: "Test",
+          users: [],
+          createdAt: "2024-05-09",
+          updatedAt: "2024-05-09"
+        }
+
+        cy.get('input[formControlName=date]').type(session.date)
         cy.get('mat-select[formControlName="teacher_id"]').click();
         cy.get('mat-option').contains('Hélène THIERCELIN').click()
 
         cy.get('button[type="submit"]').should('not.be.disabled');
+
+        cy.intercept('PUT', '/api/session/1', {
+            body: session
+        });
+
         cy.get('span').contains('Save').click()
 
         cy.url().should('include', '/sessions')
+
+        cy.get('.mat-simple-snackbar').should('exist')
+        cy.get('span').contains('Session updated !').should('exist')
+        cy.get('button').contains('Close').should('exist')
     })
 });
