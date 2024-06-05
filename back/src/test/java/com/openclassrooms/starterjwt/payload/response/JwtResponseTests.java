@@ -1,4 +1,4 @@
-package com.openclassrooms.payload.response;
+package com.openclassrooms.starterjwt.payload.response;
 
 import com.openclassrooms.starterjwt.payload.response.JwtResponse;
 import org.junit.jupiter.api.BeforeEach;

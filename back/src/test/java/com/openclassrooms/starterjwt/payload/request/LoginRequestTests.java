@@ -1,4 +1,4 @@
-package com.openclassrooms.payload.request;
+package com.openclassrooms.starterjwt.payload.request;
 
 import com.openclassrooms.starterjwt.payload.request.LoginRequest;
 import org.junit.jupiter.api.BeforeEach;
