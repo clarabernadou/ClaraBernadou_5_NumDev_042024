@@ -47,11 +47,11 @@ public class AuthControllerIntTests {
     @MockBean
     private JwtUtils jwtUtils;
 
-    private static final String email = "user@example.com";
-    private static final String password = "password123";
-    private static final String firstName = "Toto";
-    private static final String lastName = "Toto";
     private static final Long id = 1L;
+    private static final String email = "test@test.fr";
+    private static final String lastName = "Toto";
+    private static final String firstName = "Toto";
+    private static final String password = "password123";
     private static final boolean admin = true;
     private static final String jwtToken = "mockedJwtToken";
 
@@ -100,14 +100,13 @@ public class AuthControllerIntTests {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(asJsonString(loginRequest))
                             .with(csrf()))
-
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.token").value(jwtToken))
-                    .andExpect(jsonPath("$.id").value(id))
-                    .andExpect(jsonPath("$.firstName").value(firstName))
-                    .andExpect(jsonPath("$.lastName").value(lastName))
-                    .andExpect(jsonPath("$.admin").value(admin));
+                            .andExpect(status().isOk())
+                            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(jsonPath("$.token").value(jwtToken))
+                            .andExpect(jsonPath("$.id").value(id))
+                            .andExpect(jsonPath("$.firstName").value(firstName))
+                            .andExpect(jsonPath("$.lastName").value(lastName))
+                            .andExpect(jsonPath("$.admin").value(admin));
 
             verify(userRepository, times(1)).findByEmail(email);
             verify(authenticationManager, times(1)).authenticate(any());

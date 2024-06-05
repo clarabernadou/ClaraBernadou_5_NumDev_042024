@@ -1,4 +1,4 @@
-package com.openclassrooms.dto;
+package com.openclassrooms.starterjwt.dto;
 
 import com.openclassrooms.starterjwt.dto.TeacherDto;
 import com.openclassrooms.starterjwt.dto.UserDto;
