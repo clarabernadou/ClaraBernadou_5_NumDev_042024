@@ -2,7 +2,6 @@ package com.openclassrooms.starterjwt.services;
 
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.repository.TeacherRepository;
-import com.openclassrooms.starterjwt.services.TeacherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +32,7 @@ public class TeacherServiceTests {
 
     @BeforeEach
     public void init() {
-        teacherId = 999L;
+        teacherId = 1L;
         mockTeacher.setId(teacherId);
 
         Teacher teacher1 = new Teacher();

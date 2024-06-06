@@ -30,7 +30,7 @@ public class UserServiceTests {
 
     @BeforeEach
     public void init() {
-        userId = 999L;
+        userId = 1L;
         mockUser.setId(userId);
     }
 
