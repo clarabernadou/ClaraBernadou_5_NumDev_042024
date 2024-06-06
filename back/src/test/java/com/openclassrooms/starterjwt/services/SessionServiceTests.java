@@ -6,8 +6,6 @@ import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.SessionRepository;
 import com.openclassrooms.starterjwt.repository.UserRepository;
-import com.openclassrooms.starterjwt.services.SessionService;
-import com.openclassrooms.starterjwt.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -45,10 +43,10 @@ public class SessionServiceTests {
 
     @BeforeEach
     public void init() {
-        sessionId = 999L;
+        sessionId = 1L;
         mockSession.setId(sessionId);
 
-        userId = 888L;
+        userId = 1L;
         mockUser.setId(userId);
 
         Session session1 = new Session();
