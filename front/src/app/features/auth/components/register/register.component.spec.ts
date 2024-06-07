@@ -47,26 +47,28 @@ describe('RegisterComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should submit with success', () => {
-    const registerRequest = RegisterRequest;
-    component.form.setValue(registerRequest);
-    component.submit();
+  describe('submit', () => {
+    it('should submit with success', () => {
+      const registerRequest = RegisterRequest;
+      component.form.setValue(registerRequest);
+      component.submit();
 
-    expect(component.form.get('email')?.value).toEqual(registerRequest.email);
-    expect(component.form.get('firstName')?.value).toEqual(registerRequest.firstName);
-    expect(component.form.get('lastName')?.value).toEqual(registerRequest.lastName);
-    expect(component.form.get('password')?.value).toEqual(registerRequest.password);
-    expect(component.onError).toBeFalsy();
-  });
+      expect(component.form.get('email')?.value).toEqual(registerRequest.email);
+      expect(component.form.get('firstName')?.value).toEqual(registerRequest.firstName);
+      expect(component.form.get('lastName')?.value).toEqual(registerRequest.lastName);
+      expect(component.form.get('password')?.value).toEqual(registerRequest.password);
+      expect(component.onError).toBeFalsy();
+    });
 
-  it('should handle register error', () => {
-    const resigterRequest = RegisterRequest;
-    const error = new Error('Register failed');
-    jest.spyOn(authService, 'register').mockReturnValue(throwError(error));
+    it('should handle register error', () => {
+      const resigterRequest = RegisterRequest;
+      const error = new Error('Register failed');
+      jest.spyOn(authService, 'register').mockReturnValue(throwError(error));
 
-    component.form.setValue(resigterRequest);
-    component.submit();
+      component.form.setValue(resigterRequest);
+      component.submit();
 
-    expect(component.onError).toBeTruthy();
+      expect(component.onError).toBeTruthy();
+    });
   });
 });
