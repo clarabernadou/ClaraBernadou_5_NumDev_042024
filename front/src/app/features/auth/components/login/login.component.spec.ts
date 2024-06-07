@@ -56,26 +56,28 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should submit with success', () => {
-    const loginRequest = LoginRequest;
-    const response = UserSessionInformation;
+  describe(('submit'), () => {
+    it('should submit with success', () => {
+      const loginRequest = LoginRequest;;
 
-    component.form.setValue(loginRequest);
-    component.submit();
+      component.form.setValue(loginRequest);
+      component.submit();
 
-    expect(component.form.get('email')?.value).toEqual(loginRequest.email);
-    expect(component.form.get('password')?.value).toEqual(loginRequest.password);
-  });
+      expect(component.form.get('email')?.value).toEqual(loginRequest.email);
+      expect(component.form.get('password')?.value).toEqual(loginRequest.password);
+    });
 
-  it('should handle login error', () => {
-    const loginRequest = LoginRequest;
-    const error = new Error('Login failed');
-    jest.spyOn(authService, 'login').mockReturnValue(throwError(error));
+    it('should handle login error', () => {
+      const loginRequest = LoginRequest;
+      const error = new Error('Login failed');
+      
+      jest.spyOn(authService, 'login').mockReturnValue(throwError(error));
 
-    component.form.setValue(loginRequest);
-    component.submit();
+      component.form.setValue(loginRequest);
+      component.submit();
 
-    expect(component.onError).toBeTruthy();
+      expect(component.onError).toBeTruthy();
+    });
   });
 });
 
