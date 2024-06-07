@@ -1,9 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { expect } from '@jest/globals';
-import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { UserService } from './user.service';
-import { User, Users } from './user.fixtures';
+import { Users } from './user.fixtures';
 
 describe('UserService', () => {
   let service: UserService;
@@ -28,7 +27,9 @@ describe('UserService', () => {
   });
 
   it('should get a user by id', () => {
-    service.getById('1').subscribe();
+    service.getById('1').subscribe(user => {
+      expect(user).toEqual(Users[0]);
+    });
 
     const req = httpMock.expectOne(`api/user/1`);
     expect(req.request.method).toBe('GET');
@@ -36,7 +37,9 @@ describe('UserService', () => {
   });
 
   it('should not get a user by id', () => {
-    service.getById('null').subscribe();
+    service.getById('null').subscribe(user => {
+      expect(user).toEqual({});
+    });
 
     const req = httpMock.expectOne(`api/user/null`);
     expect(req.request.method).toBe('GET');
@@ -44,7 +47,9 @@ describe('UserService', () => {
   });
 
   it('should delete a user', () => {
-    service.delete('1').subscribe();
+    service.delete('1').subscribe(user => {
+      expect(user).toEqual({});
+    });
 
     const req = httpMock.expectOne('api/user/1');
     expect(req.request.method).toBe('DELETE');
@@ -52,7 +57,9 @@ describe('UserService', () => {
   });
 
   it('should not delete a user', () => {
-    service.delete('null').subscribe();
+    service.delete('null').subscribe(user => {
+      expect(user).toEqual({});
+    });
 
     const req = httpMock.expectOne('api/user/null');
     expect(req.request.method).toBe('DELETE');

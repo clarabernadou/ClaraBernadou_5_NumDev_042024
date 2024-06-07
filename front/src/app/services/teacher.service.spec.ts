@@ -1,9 +1,9 @@
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { expect } from '@jest/globals';
 
 import { TeacherService } from './teacher.service';
-import { Teacher, Teachers } from './teacher.fixtures';
+import { Teachers } from './teacher.fixtures';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('TeacherService', () => {
@@ -30,7 +30,10 @@ describe('TeacherService', () => {
   });
 
   it('should return all teachers', () => {
-    service.all().subscribe();
+    service.all().subscribe(teachers => {
+      expect(teachers.length).toBe(2);
+      expect(teachers).toEqual(Teachers);
+    });
 
     const req = httpMock.expectOne(`api/teacher`);
     expect(req.request.method).toBe('GET');
@@ -38,7 +41,10 @@ describe('TeacherService', () => {
   });
 
   it('should not return all teachers', () => {
-    service.all().subscribe();
+    service.all().subscribe(teachers => {
+      expect(teachers.length).toBe(0);
+      expect(teachers).toEqual([]);
+    });
 
     const req = httpMock.expectOne(`api/teacher`);
     expect(req.request.method).toBe('GET');
@@ -46,7 +52,9 @@ describe('TeacherService', () => {
   });
 
   it('should return a teacher', () => {
-    service.detail('1').subscribe();
+    service.detail('1').subscribe(teacher => {
+      expect(teacher).toEqual(Teachers[0]);
+    });
 
     const req = httpMock.expectOne(`api/teacher/1`);
     expect(req.request.method).toBe('GET');
@@ -54,7 +62,9 @@ describe('TeacherService', () => {
   });
 
   it('should not return a teacher', () => {
-    service.detail('null').subscribe();
+    service.detail('null').subscribe(teacher => {
+      expect(teacher).toBeNull();
+    });
 
     const req = httpMock.expectOne(`api/teacher/null`);
     expect(req.request.method).toBe('GET');
