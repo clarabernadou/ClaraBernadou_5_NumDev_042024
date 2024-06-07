@@ -42,5 +42,29 @@ describe('DetailComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  
+  it('should go back', () => {
+    const spy = jest.spyOn(window.history, 'back');
+    component.back();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should delete', () => {
+    const spy = jest.spyOn(component, 'delete');
+    component.delete();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should participate', () => {
+    const spy = jest.spyOn(component, 'participate');
+    component.participate();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should unParticipate', () => {
+    const spy = jest.spyOn(component, 'unParticipate');
+    component.unParticipate();
+    expect(spy).toHaveBeenCalled();
+  });
 });
 
