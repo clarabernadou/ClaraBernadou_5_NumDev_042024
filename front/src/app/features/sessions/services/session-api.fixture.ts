@@ -1,6 +1,6 @@
 import { Session } from "../interfaces/session.interface";
 
-export const sessionApiFixture: Session = {
+export const FIX_SESSION_API_INFORMATIONS: Session = {
     id: 1,
     name: 'Session 1',
     description: 'This is a description',
@@ -11,8 +11,8 @@ export const sessionApiFixture: Session = {
     updatedAt: new Date()
 };
 
-export const sessionApiFixtureList: Session[] = [
-    sessionApiFixture,
+export const FIX_SESSION_API_INFORMATIONS_ARR: Session[] = [
+    FIX_SESSION_API_INFORMATIONS,
     {
         id: 2,
         name: 'Session 2',

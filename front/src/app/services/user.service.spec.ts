@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { expect } from '@jest/globals';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { UserService } from './user.service';
-import { Users } from './user.fixtures';
+import { FIX_USER_INFORMATIONS_ARR } from './user.fixtures';
 
 describe('UserService', () => {
   let service: UserService;
@@ -28,12 +28,12 @@ describe('UserService', () => {
 
   it('should get a user by id', () => {
     service.getById('1').subscribe(user => {
-      expect(user).toEqual(Users[0]);
+      expect(user).toEqual(FIX_USER_INFORMATIONS_ARR[0]);
     });
 
     const req = httpMock.expectOne(`api/user/1`);
     expect(req.request.method).toBe('GET');
-    req.flush(Users[0]);
+    req.flush(FIX_USER_INFORMATIONS_ARR[0]);
   });
 
   it('should not get a user by id', () => {
