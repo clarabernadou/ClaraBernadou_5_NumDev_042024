@@ -1,12 +1,4 @@
-export const Teacher = {
-    id: 1,
-    lastName: 'Toto',
-    firstName: 'Toto',
-    createdAt: '2024-04-18 23:30:34',
-    updatedAt: '2024-04-18 23:30:34',
-};
-
-export const Teachers = [
+export const FIX_TEACHER_INFORMATIONS_ARR = [
     {
         id: 1,
         lastName: 'Toto',

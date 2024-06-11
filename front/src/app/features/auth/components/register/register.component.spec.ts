@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Observable } from 'rxjs';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { RegisterRequest } from './register.component.fixtures';
+import { FIX_REGISTER_USER_INFORMATIONS } from './register.component.fixtures';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LoginComponent } from '../login/login.component';
 
@@ -61,11 +61,11 @@ describe('RegisterComponent', () => {
     it('should submit with success', () => {
       const routerTestSpy = jest.spyOn(router, 'navigate').mockImplementation(async () => true);
 
-      component.form.setValue(RegisterRequest);
+      component.form.setValue(FIX_REGISTER_USER_INFORMATIONS);
       component.submit();
 
       const req = httpMock.expectOne('api/auth/register');
-      expect(req.request.body).toEqual(RegisterRequest);
+      expect(req.request.body).toEqual(FIX_REGISTER_USER_INFORMATIONS);
       expect(req.request.method).toBe('POST');
       req.flush("Success");
 
@@ -76,7 +76,7 @@ describe('RegisterComponent', () => {
       const error = new Error('Register failed');
       const authServiceSpy = jest.spyOn(authService, 'register').mockReturnValue(new Observable(observer => observer.error(error)));
 
-      component.form.setValue(RegisterRequest);
+      component.form.setValue(FIX_REGISTER_USER_INFORMATIONS);
       component.submit();
 
       expect(authServiceSpy).toHaveBeenCalled();
