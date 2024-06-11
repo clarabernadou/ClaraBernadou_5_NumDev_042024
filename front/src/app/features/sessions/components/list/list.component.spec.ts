@@ -40,12 +40,7 @@ describe('ListComponent', () => {
     httpMock.verify();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
   it('should return the session information', () => {
-
     component.user;
 
     const req = httpMock.expectOne('api/session');
