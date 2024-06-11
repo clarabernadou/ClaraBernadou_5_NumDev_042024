@@ -1,6 +1,6 @@
 import { SessionInformation } from "../interfaces/sessionInformation.interface"
 
-export const UserSessionInformation: SessionInformation = {
+export const FIX_USER_SESSION_INFORMATION: SessionInformation = {
     token: '98a4b7e2-12c3-4d56-a789-0e1f2a3b4c5d',
     type: 'string',
     id: 1,
@@ -10,7 +10,7 @@ export const UserSessionInformation: SessionInformation = {
     admin: false,
 }
 
-export const UserSessionInformationWithError: SessionInformation = {
+export const FIX_USER_SESSION_INFORMATION_WITH_ERROR: SessionInformation = {
   token: '98a4b7e2-12c3-4d56-a789-0e1f2a3b4c5d',
   type: 'string',
   id: 1,
@@ -20,23 +20,15 @@ export const UserSessionInformationWithError: SessionInformation = {
   admin: false,
 }
 
-export const UserSessionsInformations: SessionInformation[] = [
-  {
-    token: '98a4b7e2-12c3-4d56-a789-0e1f2a3b4c5d',
-    type: 'string',
-    id: 1,
-    username: 'Toto',
-    firstName: 'Toto',
-    lastName: 'Toto',
-    admin: false,
+export const FIX_USER_SESSION_INFORMATION_ARR: SessionInformation[] = [
+    FIX_USER_SESSION_INFORMATION,
+    {
+      token: '98a4b7e2-12c3-4d56-a789-0e1f2a3b4c5e',
+      type: 'string',
+      id: 2,
+      username: 'Tata',
+      firstName: 'Tata',
+      lastName: 'Tata',
+      admin: false,
   },
-  {
-    token: '98a4b7e2-12c3-4d56-a789-0e1f2a3b4c5e',
-    type: 'string',
-    id: 2,
-    username: 'Tata',
-    firstName: 'Tata',
-    lastName: 'Tata',
-    admin: false,
-  }
 ]

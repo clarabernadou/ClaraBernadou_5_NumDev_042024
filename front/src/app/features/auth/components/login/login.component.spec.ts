@@ -11,7 +11,7 @@ import { expect } from '@jest/globals';
 import { SessionService } from 'src/app/services/session.service';
 
 import { LoginComponent } from './login.component';
-import { LoginRequest } from '../../services/auth.service.fixtures';
+import { FIX_LOGIN_USER_INFORMATIONS } from '../../services/auth.service.fixtures';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
@@ -62,11 +62,11 @@ describe('LoginComponent', () => {
     it('should submit with success', () => {
       const routerTestSpy = jest.spyOn(router, 'navigate').mockImplementation(async () => true);
 
-      component.form.setValue(LoginRequest);
+      component.form.setValue(FIX_LOGIN_USER_INFORMATIONS);
       component.submit();
 
       const req = httpMock.expectOne('api/auth/login');
-      expect(req.request.body).toEqual(LoginRequest);
+      expect(req.request.body).toEqual(FIX_LOGIN_USER_INFORMATIONS);
       expect(req.request.method).toBe('POST');
       req.flush("Success");
 
@@ -77,7 +77,7 @@ describe('LoginComponent', () => {
       const error = new Error('Login failed');
       const authServiceSpy = jest.spyOn(authService, 'login').mockReturnValue(new Observable(observer => observer.error(error)));
 
-      component.form.setValue(LoginRequest);
+      component.form.setValue(FIX_LOGIN_USER_INFORMATIONS);
       component.submit();
 
       expect(authServiceSpy).toHaveBeenCalled();
