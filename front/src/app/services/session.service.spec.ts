@@ -4,7 +4,7 @@ import { expect } from '@jest/globals';
 import { SessionService } from './session.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpErrorResponse } from '@angular/common/http';
-import { UserSessionInformation, UserSessionInformationWithError } from './session.fixtures';
+import { FIX_USER_SESSION_INFORMATION, FIX_USER_SESSION_INFORMATION_WITH_ERROR } from './session.fixtures';
 
 describe('SessionService', () => {
   let service: SessionService;
@@ -45,14 +45,14 @@ describe('SessionService', () => {
   });
 
   it('should log in', () => {
-    service.logIn(UserSessionInformation);
+    service.logIn(FIX_USER_SESSION_INFORMATION);
 
     expect(service.isLogged).toBeTruthy();
-    expect(service.sessionInformation).toEqual(UserSessionInformation);
+    expect(service.sessionInformation).toEqual(FIX_USER_SESSION_INFORMATION);
   });
 
   it('should not be log in', () => {
-    service.logIn(UserSessionInformationWithError);
+    service.logIn(FIX_USER_SESSION_INFORMATION_WITH_ERROR);
     service.$isLogged().subscribe(
       session => { 
         expect(session).toBeFalsy(); 
@@ -63,7 +63,7 @@ describe('SessionService', () => {
     );
 
     expect(service.isLogged).toBeTruthy();
-    expect(service.sessionInformation).not.toEqual(UserSessionInformation);
+    expect(service.sessionInformation).not.toEqual(FIX_USER_SESSION_INFORMATION);
   });
 
   it('should log out', () => {

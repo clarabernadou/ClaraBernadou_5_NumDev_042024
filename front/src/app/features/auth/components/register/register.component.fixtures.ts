@@ -1,13 +1,6 @@
-export const RegisterRequest = {
+export const FIX_REGISTER_USER_INFORMATIONS = {
     email: 'toto@test.fr',
     firstName: 'Toto',
     lastName: 'Toto',
     password: 'Toto1234'
-};
-
-export const EmptyRegisterRequest = {
-    email: '',
-    firstName: '',
-    lastName: '',
-    password: ''
 };
