@@ -12,18 +12,17 @@ import { SessionService } from 'src/app/services/session.service';
 
 import { LoginComponent } from './login.component';
 import { LoginRequest } from '../../services/auth.service.fixtures';
-import { UserSessionInformation } from 'src/app/services/session.fixtures';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { User } from 'src/app/services/user.fixtures';
-import { throwError } from 'rxjs';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Observable } from 'rxjs';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let router: Router;
-  let sessionService: SessionService;
   let authService: AuthService;
+  let httpMock: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -37,46 +36,52 @@ describe('LoginComponent', () => {
         MatIconModule,
         MatFormFieldModule,
         MatInputModule,
-        ReactiveFormsModule]
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes([{ path: 'login', component: LoginComponent }]),
+      ]
     })
       .compileComponents();
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
-    sessionService = TestBed.inject(SessionService);
     router = TestBed.inject(Router);
     fixture.detectChanges();
     authService = TestBed.inject(AuthService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    httpMock.verify();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe(('submit'), () => {
+  describe('submit', () => {
     it('should submit with success', () => {
-      const loginRequest = LoginRequest;;
+      const routerTestSpy = jest.spyOn(router, 'navigate').mockImplementation(async () => true);
 
-      component.form.setValue(loginRequest);
+      component.form.setValue(LoginRequest);
       component.submit();
 
-      expect(component.form.get('email')?.value).toEqual(loginRequest.email);
-      expect(component.form.get('password')?.value).toEqual(loginRequest.password);
+      const req = httpMock.expectOne('api/auth/login');
+      expect(req.request.body).toEqual(LoginRequest);
+      expect(req.request.method).toBe('POST');
+      req.flush("Success");
+
+      expect(routerTestSpy).toHaveBeenCalledWith(['/sessions']);
     });
 
     it('should handle login error', () => {
-      const loginRequest = LoginRequest;
       const error = new Error('Login failed');
-      
-      jest.spyOn(authService, 'login').mockReturnValue(throwError(error));
+      const authServiceSpy = jest.spyOn(authService, 'login').mockReturnValue(new Observable(observer => observer.error(error)));
 
-      component.form.setValue(loginRequest);
+      component.form.setValue(LoginRequest);
       component.submit();
 
-      expect(component.onError).toBeTruthy();
+      expect(authServiceSpy).toHaveBeenCalled();
+      expect(component.onError).toBe(true);
     });
   });
 });
