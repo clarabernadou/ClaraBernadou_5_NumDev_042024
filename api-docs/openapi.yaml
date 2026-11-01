@@ -1,0 +1,435 @@
+openapi: 3.0.3
+info:
+  title: Yoga (NumDev) — API back-end
+  version: 1.0.0
+  description: |
+    API REST d'une application de réservation de séances de yoga : comptes, séances, professeurs et participation aux séances.
+
+    Cette documentation est rédigée à partir du code du dépôt (contrôleurs, DTO et configuration de sécurité Spring). Elle décrit l'API ; aucun serveur n'est hébergé ici.
+
+    **Authentification** : les routes `/api/auth/**` sont publiques. Toutes les autres exigent un jeton JWT dans l'en-tête `Authorization: Bearer <jeton>`, obtenu avec `POST /api/auth/login`.
+servers:
+  - url: http://localhost:8080
+    description: Serveur local
+tags:
+  - name: Authentification
+  - name: Séances
+  - name: Professeurs
+  - name: Utilisateurs
+paths:
+  /api/auth/login:
+    post:
+      tags: [Authentification]
+      summary: Se connecter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
+        '400':
+          description: Champs manquants
+        '401':
+          description: Identifiants invalides
+  /api/auth/register:
+    post:
+      tags: [Authentification]
+      summary: Créer un compte
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '200':
+          description: Compte créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: User registered successfully!
+        '400':
+          description: "Adresse e-mail déjà utilisée ou champs invalides"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                message: "Error: Email is already taken!"
+  /api/session:
+    get:
+      tags: [Séances]
+      summary: Lister les séances
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Toutes les séances
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [Séances]
+      summary: Créer une séance
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionInput'
+      responses:
+        '200':
+          description: Séance créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '400':
+          description: Champs invalides
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/session/{id}:
+    get:
+      tags: [Séances]
+      summary: Lire une séance
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Séance trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '400':
+          description: Identifiant non numérique
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Séance introuvable
+    put:
+      tags: [Séances]
+      summary: Modifier une séance
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionInput'
+      responses:
+        '200':
+          description: Séance modifiée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '400':
+          description: Identifiant non numérique ou champs invalides
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      tags: [Séances]
+      summary: Supprimer une séance
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Séance supprimée
+        '400':
+          description: Identifiant non numérique
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Séance introuvable
+  /api/session/{id}/participate/{userId}:
+    post:
+      tags: [Séances]
+      summary: Participer à une séance
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Participation enregistrée
+        '400':
+          description: Identifiant non numérique ou utilisateur déjà inscrit
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Séance ou utilisateur introuvable
+    delete:
+      tags: [Séances]
+      summary: Annuler sa participation
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Participation annulée
+        '400':
+          description: Identifiant non numérique ou utilisateur non inscrit
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Séance introuvable
+  /api/teacher:
+    get:
+      tags: [Professeurs]
+      summary: Lister les professeurs
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Tous les professeurs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Teacher'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/teacher/{id}:
+    get:
+      tags: [Professeurs]
+      summary: Lire un professeur
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Professeur trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '400':
+          description: Identifiant non numérique
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Professeur introuvable
+  /api/user/{id}:
+    get:
+      tags: [Utilisateurs]
+      summary: Lire un utilisateur
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Utilisateur trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Identifiant non numérique
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Utilisateur introuvable
+    delete:
+      tags: [Utilisateurs]
+      summary: Supprimer un compte
+      description: "Un utilisateur ne peut supprimer que son propre compte : la requête renvoie 401 si l'utilisateur connecté n'est pas celui qui est ciblé."
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Compte supprimé
+        '400':
+          description: Identifiant non numérique
+        '401':
+          description: Jeton invalide ou compte d'un autre utilisateur
+        '404':
+          description: Utilisateur introuvable
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        description: Identifiant numérique, transmis sous forme de texte
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        description: Identifiant numérique de l'utilisateur
+  responses:
+    Unauthorized:
+      description: Jeton absent, invalide ou expiré
+  schemas:
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    SignupRequest:
+      type: object
+      required: [email, firstName, lastName, password]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 50
+        firstName:
+          type: string
+          minLength: 3
+          maxLength: 20
+        lastName:
+          type: string
+          minLength: 3
+          maxLength: 20
+        password:
+          type: string
+          minLength: 6
+          maxLength: 40
+    JwtResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        type:
+          type: string
+          example: Bearer
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        admin:
+          type: boolean
+    SessionInput:
+      type: object
+      required: [name, date, teacher_id, description]
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        date:
+          type: string
+          format: date-time
+        teacher_id:
+          type: integer
+          format: int64
+        description:
+          type: string
+          maxLength: 2500
+    Session:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        date:
+          type: string
+          format: date-time
+        teacher_id:
+          type: integer
+          format: int64
+        description:
+          type: string
+        users:
+          type: array
+          description: Identifiants des participants
+          items:
+            type: integer
+            format: int64
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Teacher:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        lastName:
+          type: string
+        firstName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        admin:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
